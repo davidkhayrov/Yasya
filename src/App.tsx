@@ -1,51 +1,56 @@
-import { useEffect, useRef, useState } from "react";
+
+import { useRef, useState } from "react";
 
 export default function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [needsTap, setNeedsTap] = useState(false);
+  const [soundOn, setSoundOn] = useState(false);
 
-  useEffect(() => {
+  const toggleSound = async () => {
     const video = videoRef.current;
     if (!video) return;
-    video.muted = false;
-    video.play().catch(() => setNeedsTap(true));
-  }, []);
 
-  useEffect(() => {
-    if (!needsTap) return;
-    const enableSound = () => {
-      const video = videoRef.current;
-      if (!video) return;
+    if (soundOn) {
+      video.muted = true;
+      setSoundOn(false);
+    } else {
       video.muted = false;
-      video.play().catch(() => {});
-      setNeedsTap(false);
-    };
-    window.addEventListener("pointerdown", enableSound);
-    window.addEventListener("keydown", enableSound);
-    return () => {
-      window.removeEventListener("pointerdown", enableSound);
-      window.removeEventListener("keydown", enableSound);
-    };
-  }, [needsTap]);
+      try {
+        await video.play();
+        setSoundOn(true);
+      } catch (error) {
+        video.muted = true;
+        setSoundOn(false);
+      }
+    }
+  };
 
   return (
-    <div className="fixed inset-0 bg-black">
+    <div
+      className="fixed inset-0 h-screen w-screen overflow-hidden bg-black"
+      onClick={toggleSound}
+    >
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
-        src="/intro.mp4"
+        className="absolute inset-0 h-full w-full object-cover"
+        src="/1113.MP4"
         autoPlay
+        muted
         loop
         playsInline
-        controls={false}
+        preload="auto"
       />
-      {needsTap && (
-        <div className="pointer-events-none absolute inset-0 flex items-end justify-center pb-12">
-          <p className="rounded-full bg-black/60 px-6 py-3 text-sm text-white">
-            Нажмите в любом месте, чтобы включить звук
-          </p>
-        </div>
-      )}
+
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleSound();
+          }}
+          className="rounded-full bg-black/60 px-6 py-3 text-sm text-white"
+        >
+          {soundOn ? "Выключить звук" : "Включить звук"}
+        </button>
+      </div>
     </div>
   );
 }
