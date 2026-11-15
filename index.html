@@ -1,33 +1,79 @@
-<!doctype html>
-<html lang="en">
-   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Иконка сайта -->
-    <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-    <!-- Название сайта -->
-    <title>Фотоальбом</title>
+* {
+  box-sizing: border-box;
+}
 
-    <!-- Описание сайта -->
-    <meta name="description" content="Семейный фотоальбом — яркие моменты и воспоминания." />
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
 
-    <!-- Превью для Telegram и других мессенджеров -->
-    <meta property="og:title" content="Фотоальбом" />
-    <meta property="og:description" content="Семейный фотоальбом — яркие моменты и воспоминания." />
-    <meta property="og:image" content="https://photo-album-gold-omega.vercel.app/preview.jpg" />
-    <meta property="og:url" content="https://photo-album-gold-omega.vercel.app/" />
-    <meta property="og:type" content="website" />
+body {
+  background: #000;
+  font-family: Arial, sans-serif;
+}
 
-    <!-- Превью для Twitter / X -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Фотоальбом" />
-    <meta name="twitter:description" content="Семейный фотоальбом — яркие моменты и воспоминания." />
-    <meta name="twitter:image" content="https://photo-album-gold-omega.vercel.app/preview.jpg" />
-</head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+.album-screen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #000;
+}
+
+.album-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: #000;
+}
+
+.sound-button {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  padding: 13px 22px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 30px;
+  background: rgba(0,0,0,0.65);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+}
+
+.sound-button:active {
+  transform: translateX(-50%) scale(0.96);
+}
+
+@media (max-width: 600px) {
+  .sound-button {
+    font-size: 13px;
+    padding: 12px 18px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .sound-button {
+    bottom: max(10px, env(safe-area-inset-bottom));
+    padding: 8px 16px;
+  }
+}

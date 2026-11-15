@@ -12,26 +12,25 @@ export default function App() {
     if (soundOn) {
       video.muted = true;
       setSoundOn(false);
-    } else {
-      video.muted = false;
-      try {
-        await video.play();
-        setSoundOn(true);
-      } catch (error) {
-        video.muted = true;
-        setSoundOn(false);
-      }
+      return;
+    }
+
+    video.muted = false;
+
+    try {
+      await video.play();
+      setSoundOn(true);
+    } catch {
+      video.muted = true;
+      setSoundOn(false);
     }
   };
 
   return (
-    <div
-      className="fixed inset-0 h-screen w-screen overflow-hidden bg-black"
-      onClick={toggleSound}
-    >
+    <main className="album-screen">
       <video
         ref={videoRef}
-        className="absolute inset-0 h-full w-full object-cover"
+        className="album-video"
         src="/1113.MP4"
         autoPlay
         muted
@@ -40,17 +39,13 @@ export default function App() {
         preload="auto"
       />
 
-      <div className="absolute bottom-8 left-0 right-0 flex justify-center">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleSound();
-          }}
-          className="rounded-full bg-black/60 px-6 py-3 text-sm text-white"
-        >
-          {soundOn ? "Выключить звук" : "Включить звук"}
-        </button>
-      </div>
-    </div>
+      <button
+        className="sound-button"
+        onClick={toggleSound}
+        aria-label={soundOn ? "Выключить звук" : "Включить звук"}
+      >
+        {soundOn ? "🔊 Выключить звук" : "🔇 Включить звук"}
+      </button>
+    </main>
   );
 }
