@@ -3,26 +3,23 @@ import { useRef, useState } from "react";
 
 export default function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [soundOn, setSoundOn] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const toggleSound = async () => {
+  const togglePlayback = async () => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (soundOn) {
-      video.muted = true;
-      setSoundOn(false);
-      return;
-    }
-
-    video.muted = false;
-
-    try {
-      await video.play();
-      setSoundOn(true);
-    } catch {
-      video.muted = true;
-      setSoundOn(false);
+    if (video.paused) {
+      // Звук включается вместе с воспроизведением по нажатию пользователя.
+      video.muted = false;
+      try {
+        await video.play();
+      } catch {
+        video.pause();
+        setIsPlaying(false);
+      }
+    } else {
+      video.pause();
     }
   };
 
@@ -32,20 +29,23 @@ export default function App() {
         ref={videoRef}
         className="album-video"
         src="/1113.mp4"
-        autoPlay
-        muted
         loop
         playsInline
         preload="auto"
+        onClick={togglePlayback}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            void togglePlayback();
+          }
+        }}
+        tabIndex={0}
+        role="button"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        aria-label={isPlaying ? "Приостановить видео" : "Продолжить видео"}
       />
 
-      <button
-        className="sound-button"
-        onClick={toggleSound}
-        aria-label={soundOn ? "Выключить звук" : "Включить звук"}
-      >
-        {soundOn ? "🔊 Выключить звук" : "🔇 Включить звук"}
-      </button>
     </main>
   );
 }

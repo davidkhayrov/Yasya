@@ -41,6 +41,7 @@ body {
   object-fit: cover;
   object-position: center;
   background: #000;
+  cursor: pointer;
 }
 
 .sound-button {
