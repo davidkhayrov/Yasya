@@ -31,7 +31,7 @@ export default function App() {
       <video
         ref={videoRef}
         className="album-video"
-        src="/1113.MP4"
+        src="/1113.mp4"
         autoPlay
         muted
         loop
